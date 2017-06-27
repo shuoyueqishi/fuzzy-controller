@@ -14,7 +14,14 @@ target(0),actual(0),emax(e_max),demax(de_max),umax(u_max),e_mf_paras(NULL),de_mf
    mf_t_de="trimf";
    mf_t_u="trimf";
 }
-//Èı½ÇÁ¥Êô¶Èº¯Êı
+
+Fuzzy_controller::~Fuzzy_controller()
+{
+  delete e_mf_paras [];
+  delete de_mf_paras [];
+  delete u_mf_paras [];
+}
+//ä¸‰è§’éš¶å±åº¦å‡½æ•°
 float Fuzzy_controller::trimf(float x,float a,float b,float c)
 {
    float u;
@@ -27,7 +34,7 @@ float Fuzzy_controller::trimf(float x,float a,float b,float c)
    return u;
 
 }
-//ÕıÌ¬Á¥Êô¶Èº¯Êı
+//æ­£æ€éš¶å±åº¦å‡½æ•°
 float Fuzzy_controller::gaussmf(float x,float ave,float sigma) 
 {
 	float u;
@@ -38,7 +45,7 @@ float Fuzzy_controller::gaussmf(float x,float ave,float sigma)
 	u=exp(-pow(((x-ave)/sigma),2));
 	return u;
 }
-//ÌİĞÎÁ¥Êô¶Èº¯Êı
+//æ¢¯å½¢éš¶å±åº¦å‡½æ•°
 float Fuzzy_controller::trapmf(float x,float a,float b,float c,float d)
 {
     float u;
@@ -52,7 +59,7 @@ float Fuzzy_controller::trapmf(float x,float a,float b,float c,float d)
 		u=0;
 	return u;
 }
-//ÉèÖÃÄ£ºı¹æÔò
+//è®¾ç½®æ¨¡ç³Šè§„åˆ™
 void Fuzzy_controller::setRule(int rulelist[N][N])
 {
 	for(int i=0;i<N;i++)
@@ -60,7 +67,7 @@ void Fuzzy_controller::setRule(int rulelist[N][N])
 	     rule[i][j]=rulelist[i][j];
 }
 
-//ÉèÖÃÄ£ºıÁ¥Êô¶Èº¯ÊıµÄÀàĞÍºÍ²ÎÊı
+//è®¾ç½®æ¨¡ç³Šéš¶å±åº¦å‡½æ•°çš„ç±»å‹å’Œå‚æ•°
 void Fuzzy_controller::setMf(const string & mf_type_e,float *e_mf,const string & mf_type_de,float *de_mf,const string & mf_type_u,float *u_mf)
 {
 	if(mf_type_e=="trimf"||mf_type_e=="gaussmf"||mf_type_e=="trapmf")
@@ -87,11 +94,11 @@ void Fuzzy_controller::setMf(const string & mf_type_e,float *e_mf,const string &
 	for(int i=0;i<N*3;i++)
 	   u_mf_paras[i]=u_mf[i];
 }
-//ÊµÏÖÄ£ºı¿ØÖÆ
+//å®ç°æ¨¡ç³Šæ§åˆ¶
 float Fuzzy_controller::realize(float t,float a)   
 {
 	float u_e[N],u_de[N],u_u[N];
-	int u_e_index[3],u_de_index[3];//¼ÙÉèÒ»¸öÊäÈë×î¶à¼¤»î3¸öÄ£ºı×Ó¼¯
+	int u_e_index[3],u_de_index[3];//å‡è®¾ä¸€ä¸ªè¾“å…¥æœ€å¤šæ¿€æ´»3ä¸ªæ¨¡ç³Šå­é›†
 	float u;
 	int M;
 	target=t;
@@ -101,32 +108,32 @@ float Fuzzy_controller::realize(float t,float a)
 	e=Ke*e;
 	de=Kde*de;
 	if(mf_t_e=="trimf")
-		M=3;               //Èı½Çº¯ÊıÓĞÈı¸ö²ÎÊı
+		M=3;               //ä¸‰è§’å‡½æ•°æœ‰ä¸‰ä¸ªå‚æ•°
     else if(mf_t_e=="gaussmf")
-	    M=2;              //ÕıÌ¬º¯ÊıÓĞÁ½¸ö²ÎÊı
+	    M=2;              //æ­£æ€å‡½æ•°æœ‰ä¸¤ä¸ªå‚æ•°
 	else if(mf_t_e=="trapmf")
-		M=4;              //ÌİĞÎº¯ÊıÓĞËÄ¸ö²ÎÊı
+		M=4;              //æ¢¯å½¢å‡½æ•°æœ‰å››ä¸ªå‚æ•°
 	int j=0;
 	for(int i=0;i<N;i++)
 	{
-		u_e[i]=trimf(e,e_mf_paras[i*M],e_mf_paras[i*M+1],e_mf_paras[i*M+2]);//eÄ£ºı»¯£¬¼ÆËãËüµÄÁ¥Êô¶È
+		u_e[i]=trimf(e,e_mf_paras[i*M],e_mf_paras[i*M+1],e_mf_paras[i*M+2]);//eæ¨¡ç³ŠåŒ–ï¼Œè®¡ç®—å®ƒçš„éš¶å±åº¦
 		if(u_e[i]!=0)
-            u_e_index[j++]=i;                                              //´æ´¢±»¼¤»îµÄÄ£ºı×Ó¼¯µÄÏÂ±ê£¬¿ÉÒÔ¼õĞ¡¼ÆËãÁ¿
+            u_e_index[j++]=i;                                              //å­˜å‚¨è¢«æ¿€æ´»çš„æ¨¡ç³Šå­é›†çš„ä¸‹æ ‡ï¼Œå¯ä»¥å‡å°è®¡ç®—é‡
 	}
 	for(;j<3;j++)u_e_index[j]=0;
 
 	if(mf_t_e=="trimf")
-		M=3;              //Èı½Çº¯ÊıÓĞÈı¸ö²ÎÊı
+		M=3;              //ä¸‰è§’å‡½æ•°æœ‰ä¸‰ä¸ªå‚æ•°
     else if(mf_t_e=="gaussmf")
-	    M=2;              //ÕıÌ¬º¯ÊıÓĞÁ½¸ö²ÎÊı
+	    M=2;              //æ­£æ€å‡½æ•°æœ‰ä¸¤ä¸ªå‚æ•°
 	else if(mf_t_e=="trapmf")
-		M=4;               //ÌİĞÎº¯ÊıÓĞËÄ¸ö²ÎÊı
+		M=4;               //æ¢¯å½¢å‡½æ•°æœ‰å››ä¸ªå‚æ•°
 	j=0;
 	for(int i=0;i<N;i++)
 	{
-		u_de[i]=trimf(de,de_mf_paras[i*M],de_mf_paras[i*M+1],de_mf_paras[i*M+2]);//deÄ£ºı»¯£¬¼ÆËãËüµÄÁ¥Êô¶È
+		u_de[i]=trimf(de,de_mf_paras[i*M],de_mf_paras[i*M+1],de_mf_paras[i*M+2]);//deæ¨¡ç³ŠåŒ–ï¼Œè®¡ç®—å®ƒçš„éš¶å±åº¦
 		if(u_de[i]!=0)
-			u_de_index[j++]=i;                                                    //´æ´¢±»¼¤»îµÄÄ£ºı×Ó¼¯µÄÏÂ±ê£¬¿ÉÒÔ¼õĞ¡¼ÆËãÁ¿
+			u_de_index[j++]=i;                                                    //å­˜å‚¨è¢«æ¿€æ´»çš„æ¨¡ç³Šå­é›†çš„ä¸‹æ ‡ï¼Œå¯ä»¥å‡å°è®¡ç®—é‡
 	}
 	for(;j<3;j++)u_de_index[j]=0;
 
@@ -153,8 +160,8 @@ void Fuzzy_controller::showMf(const string & type,float *mf_paras)
 		tab==1;
 	else if(type=="trapmf")
 		tab=3;
-	cout<<"º¯ÊıÀàĞÍ£º"<<mf_t_e<<endl;
-	cout<<"º¯Êı²ÎÊıÁĞ±í£º"<<endl;
+	cout<<"å‡½æ•°ç±»å‹ï¼š"<<mf_t_e<<endl;
+	cout<<"å‡½æ•°å‚æ•°åˆ—è¡¨ï¼š"<<endl;
 	float *p=mf_paras;
 	for(int i=0;i<N*(tab+1);i++)
 	  {
@@ -167,16 +174,16 @@ void Fuzzy_controller::showMf(const string & type,float *mf_paras)
 void Fuzzy_controller::showInfo()
 {
    cout<<"Info of this fuzzy controller is as following:"<<endl;
-   cout<<"»ù±¾ÂÛÓòe£º["<<-emax<<","<<emax<<"]"<<endl;
-   cout<<"»ù±¾ÂÛÓòde£º["<<-demax<<","<<demax<<"]"<<endl;
-   cout<<"»ù±¾ÂÛÓòu£º["<<-umax<<","<<umax<<"]"<<endl;
-   cout<<"Îó²îeµÄÄ£ºıÁ¥Êô¶Èº¯Êı²ÎÊı£º"<<endl;
+   cout<<"åŸºæœ¬è®ºåŸŸeï¼š["<<-emax<<","<<emax<<"]"<<endl;
+   cout<<"åŸºæœ¬è®ºåŸŸdeï¼š["<<-demax<<","<<demax<<"]"<<endl;
+   cout<<"åŸºæœ¬è®ºåŸŸuï¼š["<<-umax<<","<<umax<<"]"<<endl;
+   cout<<"è¯¯å·®eçš„æ¨¡ç³Šéš¶å±åº¦å‡½æ•°å‚æ•°ï¼š"<<endl;
    showMf(mf_t_e,e_mf_paras);
-   cout<<"Îó²î±ä»¯ÂÊdeµÄÄ£ºıÁ¥Êô¶Èº¯Êı²ÎÊı£º"<<endl;
+   cout<<"è¯¯å·®å˜åŒ–ç‡deçš„æ¨¡ç³Šéš¶å±åº¦å‡½æ•°å‚æ•°ï¼š"<<endl;
    showMf(mf_t_de,de_mf_paras);
-   cout<<"Êä³öuµÄÄ£ºıÁ¥Êô¶Èº¯Êı²ÎÊı£º"<<endl;
+   cout<<"è¾“å‡ºuçš„æ¨¡ç³Šéš¶å±åº¦å‡½æ•°å‚æ•°ï¼š"<<endl;
    showMf(mf_t_u,u_mf_paras);
-   cout<<"Ä£ºı¹æÔò±í£º"<<endl;
+   cout<<"æ¨¡ç³Šè§„åˆ™è¡¨ï¼š"<<endl;
    for(int i=0;i<N;i++)
    {
 	 for(int j=0;j<N;j++)
@@ -187,10 +194,10 @@ void Fuzzy_controller::showInfo()
 	   cout<<endl;
    }
    cout<<endl;
-   cout<<"Îó²îµÄÁ¿»¯±ÈÀıÒò×ÓKe="<<Ke<<endl;
-   cout<<"Îó²î±ä»¯ÂÊµÄÁ¿»¯±ÈÀıÒò×ÓKde="<<Kde<<endl;
-   cout<<"Êä³öµÄÁ¿»¯±ÈÀıÒò×ÓKu="<<Ku<<endl;
-   cout<<"Éè¶¨Ä¿±êtarget="<<target<<endl;
-   cout<<"Îó²îe="<<e<<endl;
+   cout<<"è¯¯å·®çš„é‡åŒ–æ¯”ä¾‹å› å­Ke="<<Ke<<endl;
+   cout<<"è¯¯å·®å˜åŒ–ç‡çš„é‡åŒ–æ¯”ä¾‹å› å­Kde="<<Kde<<endl;
+   cout<<"è¾“å‡ºçš„é‡åŒ–æ¯”ä¾‹å› å­Ku="<<Ku<<endl;
+   cout<<"è®¾å®šç›®æ ‡target="<<target<<endl;
+   cout<<"è¯¯å·®e="<<e<<endl;
    cout<<endl;
 }
