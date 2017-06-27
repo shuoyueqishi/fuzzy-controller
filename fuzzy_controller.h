@@ -7,39 +7,39 @@ using namespace std;
 class Fuzzy_controller
 {
 public:
-	const static int N=7;//¶¨ÒåÁ¿»¯ÂÛÓòÄ£ºı×Ó¼¯µÄ¸öÊı
+	const static int N=7;//å®šä¹‰é‡åŒ–è®ºåŸŸæ¨¡ç³Šå­é›†çš„ä¸ªæ•°
 private:
-	float target;//ÏµÍ³µÄ¿ØÖÆÄ¿±ê
-	float actual;//²ÉÑù»ñµÃµÄÊµ¼ÊÖµ
-	float e;     //Îó²î
-	float e_pre; //ÉÏÒ»´ÎµÄÎó²î
-	float de;    //Îó²îµÄ±ä»¯ÂÊ
-	float emax;  //Îó²î»ù±¾ÂÛÓòÉÏÏŞ
-	float demax; //Îó²î±ç»¯ÂÊ»ù±¾ÂÛÓòµÄÉÏÏŞ
-	float umax;  //Êä³öµÄÉÏÏŞ
-	float Ke;    //Ke=n/emax,Á¿»¯ÂÛÓòÎª[-3,-2,-1,0,1,2,3]
-	float Kde;   //Ke=n/demax,Á¿»¯ÂÛÓòÎª[-3,-2,-1,0,1,2,3]
-	float Ku;    //Ke=umax/n,Á¿»¯ÂÛÓòÎª[-3,-2,-1,0,1,2,3]
-	int rule[N][N];//Ä£ºı¹æÔò±í
-	string mf_t_e;   //eµÄÁ¥Êô¶Èº¯ÊıÀàĞÍ
-	string mf_t_de;  //deµÄÁ¥Êô¶Èº¯ÊıÀàĞÍ
-	string mf_t_u;   //uµÄÁ¥Êô¶Èº¯ÊıÀàĞÍ
-	float *e_mf_paras; //Îó²îµÄÁ¥Êô¶Èº¯ÊıµÄ²ÎÊı
-	float *de_mf_paras;//Îó²îµÄÆ«²îÁ¥Êô¶Èº¯ÊıµÄ²ÎÊı
-	float *u_mf_paras; //Êä³öµÄÁ¥Êô¶Èº¯ÊıµÄ²ÎÊı
+	float target;//ç³»ç»Ÿçš„æ§åˆ¶ç›®æ ‡
+	float actual;//é‡‡æ ·è·å¾—çš„å®é™…å€¼
+	float e;     //è¯¯å·®
+	float e_pre; //ä¸Šä¸€æ¬¡çš„è¯¯å·®
+	float de;    //è¯¯å·®çš„å˜åŒ–ç‡
+	float emax;  //è¯¯å·®åŸºæœ¬è®ºåŸŸä¸Šé™
+	float demax; //è¯¯å·®è¾©åŒ–ç‡åŸºæœ¬è®ºåŸŸçš„ä¸Šé™
+	float umax;  //è¾“å‡ºçš„ä¸Šé™
+	float Ke;    //Ke=n/emax,é‡åŒ–è®ºåŸŸä¸º[-3,-2,-1,0,1,2,3]
+	float Kde;   //Ke=n/demax,é‡åŒ–è®ºåŸŸä¸º[-3,-2,-1,0,1,2,3]
+	float Ku;    //Ke=umax/n,é‡åŒ–è®ºåŸŸä¸º[-3,-2,-1,0,1,2,3]
+	int rule[N][N];//æ¨¡ç³Šè§„åˆ™è¡¨
+	string mf_t_e;   //eçš„éš¶å±åº¦å‡½æ•°ç±»å‹
+	string mf_t_de;  //deçš„éš¶å±åº¦å‡½æ•°ç±»å‹
+	string mf_t_u;   //uçš„éš¶å±åº¦å‡½æ•°ç±»å‹
+	float *e_mf_paras; //è¯¯å·®çš„éš¶å±åº¦å‡½æ•°çš„å‚æ•°
+	float *de_mf_paras;//è¯¯å·®çš„åå·®éš¶å±åº¦å‡½æ•°çš„å‚æ•°
+	float *u_mf_paras; //è¾“å‡ºçš„éš¶å±åº¦å‡½æ•°çš„å‚æ•°
 
 public:
 	Fuzzy_controller(float e_max,float de_max,float u_max);
-	~Fuzzy_controller(){};
-	float trimf(float x,float a,float b,float c);          //Èı½ÇÁ¥Êô¶Èº¯Êı
-	float gaussmf(float x,float ave,float sigma);          //ÕıÌ¬Á¥Êô¶Èº¯Êı
-	float trapmf(float x,float a,float b,float c,float d); //ÌİĞÎÁ¥Êô¶Èº¯Êı
-	//ÉèÖÃÄ£ºıÁ¥Êô¶Èº¯ÊıµÄ²ÎÊı
+	~Fuzzy_controller();
+	float trimf(float x,float a,float b,float c);          //ä¸‰è§’éš¶å±åº¦å‡½æ•°
+	float gaussmf(float x,float ave,float sigma);          //æ­£æ€éš¶å±åº¦å‡½æ•°
+	float trapmf(float x,float a,float b,float c,float d); //æ¢¯å½¢éš¶å±åº¦å‡½æ•°
+	//è®¾ç½®æ¨¡ç³Šéš¶å±åº¦å‡½æ•°çš„å‚æ•°
 	void setMf(const string & mf_type_e,float *e_mf,const string & mf_type_de,float *de_mf,const string & mf_type_u,float *u_mf);
-	void setRule(int rulelist[N][N]);                          //ÉèÖÃÄ£ºı¹æÔò
-	float realize(float t,float a);              //ÊµÏÖÄ£ºı¿ØÖÆ
-	void showInfo();                                      //ÏÔÊ¾¸ÃÄ£ºı¿ØÖÆÆ÷µÄĞÅÏ¢
-	void showMf(const string & type,float *mf_paras);      //ÏÔÊ¾Á¥Êô¶Èº¯ÊıµÄĞÅÏ¢
+	void setRule(int rulelist[N][N]);                          //è®¾ç½®æ¨¡ç³Šè§„åˆ™
+	float realize(float t,float a);              //å®ç°æ¨¡ç³Šæ§åˆ¶
+	void showInfo();                                      //æ˜¾ç¤ºè¯¥æ¨¡ç³Šæ§åˆ¶å™¨çš„ä¿¡æ¯
+	void showMf(const string & type,float *mf_paras);      //æ˜¾ç¤ºéš¶å±åº¦å‡½æ•°çš„ä¿¡æ¯
 };
 
 #endif
