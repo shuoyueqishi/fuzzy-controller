@@ -17,9 +17,9 @@ target(0),actual(0),emax(e_max),demax(de_max),umax(u_max),e_mf_paras(NULL),de_mf
 
 Fuzzy_controller::~Fuzzy_controller()
 {
-  delete e_mf_paras [];
-  delete de_mf_paras [];
-  delete u_mf_paras [];
+  delete [] e_mf_paras;
+  delete [] de_mf_paras;
+  delete [] u_mf_paras;
 }
 //三角隶属度函数
 float Fuzzy_controller::trimf(float x,float a,float b,float c)
